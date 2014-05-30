@@ -11,6 +11,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
+
 class modEfemeridesHelper
 {
   public function __construct($params){
@@ -18,6 +19,7 @@ class modEfemeridesHelper
     $this->count = $params->get('count');
     $this->date_range = $params->get('date_range');
     $this->order_by = $params->get('order_by');
+    $this->format_for_date= $params->get('format_for_date');
   }
 
   public function getEfemerides()
@@ -30,7 +32,6 @@ class modEfemeridesHelper
     }
     return $efemeridesList;
   }
-
 
   private function deleteNullElements($array)
   {
@@ -124,18 +125,16 @@ class modEfemeridesHelper
 
   private function putFormattedDate($list)
   {
-    //jimport( 'joomla.utilities.date' );
-    //$config =& JFactory::getConfig();
-    //$offset = $config->getValue('config.offset' );
+    jimport( 'joomla.utilities.date' );
+    $config =& JFactory::getConfig();
+    $offset = $config->get('offset');
     foreach ($list as $l)
     {
-      //$date = new JDate( $l->thedate, $config->getValue('config.offset' ));
-      $l->formatteddate = $l->thedate; //JHTML::_('date', $date->__toString, JText::_('DATE_FORMAT_LC'));
+      $date = new JDate( $l->thedate, $offset );
+      $l->formatteddate = $date->format($this->format_for_date);
       $newlist[] = $l;
     }
     return $newlist;
   }
-
-
 }
 ?>

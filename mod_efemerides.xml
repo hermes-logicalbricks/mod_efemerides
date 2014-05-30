@@ -53,6 +53,8 @@
           <option value="0">No</option>
           <option value="1">Yes</option>
         </field>
+        <field name="format_for_date" type="text" default="Y/m/d" size="20" label="Format for Date:" description="The format to use to show the date. (Use the default PHP standar: http://www.php.net/manual/es/function.date.php)" />
+
         <field name="text_show" type="radio" default="2" label="Text to Show" description="Text to show on the module">
           <option value="0">Title</option>
           <option value="1">Description</option>
