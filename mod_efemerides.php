@@ -1,7 +1,7 @@
 <?php
 /**
  * Efemerides! Module Entry Point
- * 
+ *
  * @package    Efemerides
  * @subpackage Modules
  * @link http://revolucionemosoaxaca.org
@@ -16,7 +16,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 // Include the syndicate functions only once
-require_once( dirname(__FILE__).DS.'helper.php' );
+require_once( __DIR__.'/helper.php' );
 jimport('joomla.filesystem.file');
 
 $document =& JFactory::getDocument();
@@ -32,26 +32,27 @@ function utilFunctionToSort($a, $b)
 	return 0;
 }
 
-$efemerides = modEfemeridesHelper::getEfemerides( $params );
-$texttoshow = $params->get('text_show');
+$efemerides_object = new modEfemeridesHelper( $params );
+$efemerides = $efemerides_object->getEfemerides();
+$texttoshow = htmlspecialchars($params->get('text_show'));
 $formatted = $params->get('formatted_date');
 $useCss = $params->get('use_css');
 $isGlobalLink = $params->get('islink');
-$textGlobalLink = $params->get('text_link');
+$textGlobalLink = htmlspecialchars($params->get('text_link'));
 $isIndividualLink = $params->get('ilinks');
-$textIndividualLink = $params->get('text_ilinks');
+$textIndividualLink = htmlspecialchars($params->get('text_ilinks'));
 
 if ($useCss)
-{ 
-  $fullpath = dirname(__FILE__).DS.'css'.DS.'efemerides.css';
+{
+  $fullpath = __DIR__.'/css/efemerides.css';
   if (!JFile::exists( $fullpath )) {
 	       $this->setError( $row->getErrorMsg() );
-	       $message = JText::_('Can\'t load css');	       
+	       $message = JText::_('Can\'t load css');
 	  }
 	  else {
 	  	  $path = JURI::base( true ).'/modules/mod_efemerides/css/efemerides.css';
 	  	  $document->addStyleSheet($path);
-  	  } 
+  	  }
 }
 
 require( JModuleHelper::getLayoutPath( 'mod_efemerides' ) );

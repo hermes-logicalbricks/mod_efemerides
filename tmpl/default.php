@@ -1,27 +1,27 @@
 <?php // no direct access
-defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
+defined('_JEXEC') or die( 'Restricted access' ); ?>
+
 <div class="modefemerides-main">
-<?php 
-	$n=count($efemerides);
-	if ($n<=0)
-    {	
+<?php
+	if (empty($efemerides))
+    {
   ?>
   <p class="modefemerides-noefemerides"> <?php echo JText::_('There is no important events to show'); ?></p>
-<?php 
+<?php
     } else {
 ?>
-<div class="modefemerides-content">	
-	<?php		
-		for ($i=0; $i < $n; $i++)
+<div class="modefemerides-content">
+	<?php
+		foreach ($efemerides as $i => $event)
 		{
-			$row = &$efemerides[$i];
+			$row = &$event;
 			?>
 			<div class="modefemerides-date">
 			<p>
 			<?php
 			if ($formatted=='1')
 			{
-			  echo $row->formatteddate; 
+			  echo $row->formatteddate;
 			}
 			else
 			{
@@ -39,13 +39,13 @@ defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 			</div>
 			<div class="modefemerides-link">
 			<?php
-			if ($isIndividualLink=='1') 
+			if ($isIndividualLink=='1')
 			  {
-			    $link 		= JRoute::_( 'index.php?option=com_efemerides&event='.$row->id);	
+			    $link 		= JRoute::_( 'index.php?option=com_efemerides&event='.$row->id);
 			 ?>
 			<a href="<?php echo $link; ?>"><?php echo $textIndividualLink ?></a>
 		<?php
-		    } 
+		    }
 		?>
 			</div>
 			<div class="modefemerides-separator"></div>
@@ -55,9 +55,9 @@ defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 </div>
 
 		<?php
-		   if ($isGlobalLink=='1') 
+		   if ($isGlobalLink=='1')
 		   {
-			$link 		= JRoute::_( 'index.php?option=com_efemerides');	
+			$link 		= JRoute::_( 'index.php?option=com_efemerides');
 		 ?>
 			<a class="efemeridesGlobalLink" href="<?php echo $link; ?>"><?php echo $textGlobalLink ?></a>
 		<?php

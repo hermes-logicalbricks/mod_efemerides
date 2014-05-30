@@ -13,134 +13,129 @@
  */
 class modEfemeridesHelper
 {
-	function deleteNullElements($array)
-	 {
-		 foreach($array as $key => $value) {
-			 	if($value == "" || $value == " " || is_null($value)) {
-					unset($array[$key]);
-				}
-				else
-					$newarray[] = $value;
-	     }
-	     return $newarray;
-	 }
+  public function __construct($params){
+    $this->random_result = $params->get('use_random');
+    $this->count = $params->get('count');
+    $this->date_range = $params->get('date_range');
+    $this->order_by = $params->get('order_by');
+  }
 
-    function getOrderEfemerides($order_by)
-	 {
-	   $order_by_length = strlen($order_by);
-
-           for ($i = 0; $i < $order_by_length; ++$i)
-	     {
-	       switch ($order_by[$i])
-		 {
-		   case 'm':
-		     $order_array[] = 'MONTH';
-		     break;
-		   case 'd':
-		     $order_array[] = 'DAY';
-		     break;
-		   case 'y':
-		     $order_array[] = 'YEAR';
-		     break;
-		 }
-	     }
-           return ' ORDER BY '.$order_array[0].'(historicdate), '.$order_array[1].'(historicdate), '.$order_array[2].'(historicdate)';
-         }
-
-	function getListEfemerides($date_range, $order_by)
-	 {
-		$db =& JFactory::getDBO();
-		$published = ' published=1';
-		$select = 'SELECT id,historicdate as thedate, DAY(historicdate) as theday,MONTH(historicdate) as themonth, YEAR(historicdate) as theyear,title,description'.' FROM #__efemerides WHERE';
-		$order = modEfemeridesHelper::getOrderEfemerides($order_by);
-		$query = ''.$select.$published.$order;
-		switch($date_range)
-		{
-			case 'by_day':
-				$query = $select.' DAY(NOW())=DAY(historicdate) '.
-				 ' AND MONTH(NOW())=MONTH(historicdate) AND'.$published.$order;
-				 break;
-			 case 'by_month':
-				 $query = $select.' MONTH(NOW())=MONTH(historicdate) AND'.$published.$order;
-				 break;
-			case 'by_year':
-				$query = ''.$select.$published.$order;
-				break;
-	    }
-		$db->setQuery($query);
-		$db->query();
-		$efemerides = $db->loadObjectList();
-
-		return $efemerides;
-	 }
-
-	function filterListEfemerides($list, $random, $count)
-	 {
-		 srand(time());
-		 $listsize = count($list);
-		 //print("Tamanio lista: ".$listsize);
-		 if ($listsize<=$count)
-		    return $list;
-		 $positions_array = array();
-		 if ($random == '1')
-		   {
-		     $size_array = count($positions_array);
-		     while ($size_array!=$count){
-		       $pos = (rand() % $listsize);
-		       $positions_array[] = $pos;
-		       $positions_array = array_unique($positions_array);
-		       $size_array = count($positions_array);
-		     }
-		   }
-		 for ($i=0;$i<$count;$i++)
-		 {
-			 $listsize = count($list);
-			 if ($random=='1')
-			   $pos = $positions_array[$i];
-			 else
-			   $pos = $i;
-			 $newlist[] = $list[$pos];
-			 //print("Entrada:".$pos);
-			 //print_r($list[$pos]);
-			 //print_r($newlist);
-			 //unset($list[$pos]);
-			 //$list = modEfemeridesHelper::deleteNullElements($list);
-
-		 }
-		 return $newlist;
-	}
-
-	function putFormattedDate($list)
-	{
-		jimport( 'joomla.utilities.date' );
-  	        $config =& JFactory::getConfig();
-                $offset = $config->getValue('config.offset' );
-		foreach ($list as $l)
-		{
-			$date = new JDate( $l->thedate, $config->getValue('config.offset' ));
-			$l->formatteddate = JHTML::_('date', $date->toFormat(), JText::_('DATE_FORMAT_LC'));
-			$newlist[] = $l;
-		}
-		return $newlist;
-	}
-
-
-    function getEfemerides( $params )
+  public function getEfemerides()
+  {
+    $efemeridesList = $this->getListEfemerides();
+    if (!empty($efemeridesList))
     {
-		//print_r("Cuenta:".$params->get('count'));
-      $efemeridesList = modEfemeridesHelper::getListEfemerides($params->get('date_range'), $params->get('order_by'));
-		//print_r($efemeridesList)
-		if (!empty($efemeridesList))
-		{
-		  $efemeridesList = modEfemeridesHelper::filterListEfemerides($efemeridesList, $params->get('use_random'),$params->get('count'));
-		  $efemeridesList = modEfemeridesHelper::putFormattedDate($efemeridesList);
-		  /*if (!empty($efemeridesList))
-		  {
-			  usort($efemeridesList,"utilFunctionToSort");
-			  }*/
-		}
-		//print_r($efemeridesList);
-        return $efemeridesList;
+      $efemeridesList = $this->filterListEfemerides($efemeridesList);
+      $efemeridesList = $this->putFormattedDate($efemeridesList);
     }
+    return $efemeridesList;
+  }
+
+
+  private function deleteNullElements($array)
+  {
+    foreach($array as $key => $value) {
+      if($value == "" || $value == " " || is_null($value)) {
+        unset($array[$key]);
+      }
+      else
+        $newarray[] = $value;
+    }
+    return $newarray;
+  }
+
+  private function getOrderEfemerides()
+  {
+    $order_by_length = strlen($this->order_by);
+
+    for ($i = 0; $i < $order_by_length; ++$i)
+    {
+      switch ($this->order_by[$i])
+      {
+      case 'm':
+        $order_array[] = 'MONTH';
+        break;
+      case 'd':
+        $order_array[] = 'DAY';
+        break;
+      case 'y':
+        $order_array[] = 'YEAR';
+        break;
+      }
+    }
+    return ' ORDER BY '.$order_array[0].'(historicdate), '.$order_array[1].'(historicdate), '.$order_array[2].'(historicdate)';
+  }
+
+  private function getListEfemerides()
+  {
+    $db =& JFactory::getDBO();
+    $published = ' ';//' published=1';
+    $select = 'SELECT id,historicdate as thedate, DAY(historicdate) as theday,MONTH(historicdate) as themonth, YEAR(historicdate) as theyear,title,description'.' FROM #__efemerides ';
+    $order = $this->getOrderEfemerides();
+    $query = ''.$select.$published.$order;
+    switch($this->date_range)
+    {
+    case 'by_day':
+      $query = $select.' DAY(NOW())=DAY(historicdate) '.
+        ' AND MONTH(NOW())=MONTH(historicdate) AND'.$published.$order;
+      break;
+    case 'by_month':
+      $query = $select.' MONTH(NOW())=MONTH(historicdate) AND'.$published.$order;
+      break;
+    case 'by_year':
+      $query = ''.$select.$published.$order;
+      break;
+    }
+    $db->setQuery($query);
+    $db->query();
+    $efemerides = $db->loadObjectList();
+
+    return $efemerides;
+  }
+
+  private function filterListEfemerides($list)
+  {
+    srand(time());
+    $listsize = count($list);
+    if ($listsize<=$this->count)
+      return $list;
+    $positions_array = array();
+    if ($this->random_result == '1')
+    {
+      $size_array = count($positions_array);
+      while ($size_array!=$this->count){
+        $pos = (rand() % $listsize);
+        $positions_array[] = $pos;
+        $positions_array = array_unique($positions_array);
+        $size_array = count($positions_array);
+      }
+    }
+    for ($i=0;$i<$this->count;$i++)
+    {
+      $listsize = count($list);
+      if ($this->random_result=='1')
+        $pos = $positions_array[$i];
+      else
+        $pos = $i;
+      $newlist[] = $list[$pos];
+    }
+    return $newlist;
+  }
+
+  private function putFormattedDate($list)
+  {
+    //jimport( 'joomla.utilities.date' );
+    //$config =& JFactory::getConfig();
+    //$offset = $config->getValue('config.offset' );
+    foreach ($list as $l)
+    {
+      //$date = new JDate( $l->thedate, $config->getValue('config.offset' ));
+      $l->formatteddate = $l->thedate; //JHTML::_('date', $date->__toString, JText::_('DATE_FORMAT_LC'));
+      $newlist[] = $l;
+    }
+    return $newlist;
+  }
+
+
 }
 ?>
