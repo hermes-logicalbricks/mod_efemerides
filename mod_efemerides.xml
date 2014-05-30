@@ -6,7 +6,7 @@
   <copyright>This module is released under the GNU/GPL License.</copyright>
   <authorEmail>hermes.o.r@gmail.com</authorEmail>
   <authorUrl>http://revolucionemosoaxaca.org</authorUrl>
-  <version>0.9</version>
+  <version>1.0</version>
   <description>Easy module to display important historical events</description>
   <files>
     <filename module="mod_efemerides">mod_efemerides.php</filename>
@@ -45,10 +45,10 @@
           <option value="myd">Month-Year-Day</option>
         </field>
 
-        <!--<field name="use_random" type="radio" default="0" label="Random" description="Shows the events in no particular order">
+        <field name="use_random" type="radio" default="yes" label="Random" description="Shows the events in no particular order">
           <option value="0">No</option>
           <option value="1">Yes</option>
-        </field>-->
+        </field>
         <field name="formatted_date" type="radio" default="1" label="Formatted Date" description="Shows the date with format, be careful, a very ancient date don't be formatted">
           <option value="0">No</option>
           <option value="1">Yes</option>

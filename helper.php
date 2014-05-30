@@ -96,30 +96,10 @@ class modEfemeridesHelper
 
   private function filterListEfemerides($list)
   {
-    srand(time());
-    $listsize = count($list);
-    if ($listsize<=$this->count)
-      return $list;
-    $positions_array = array();
-    if ($this->random_result == '1')
-    {
-      $size_array = count($positions_array);
-      while ($size_array!=$this->count){
-        $pos = (rand() % $listsize);
-        $positions_array[] = $pos;
-        $positions_array = array_unique($positions_array);
-        $size_array = count($positions_array);
-      }
+    if ($this->random_result == '1') {
+      shuffle($list);
     }
-    for ($i=0;$i<$this->count;$i++)
-    {
-      $listsize = count($list);
-      if ($this->random_result=='1')
-        $pos = $positions_array[$i];
-      else
-        $pos = $i;
-      $newlist[] = $list[$pos];
-    }
+    $newlist = array_slice($list, 0, $this->count);
     return $newlist;
   }
 
