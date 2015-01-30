@@ -71,7 +71,7 @@ class modEfemeridesHelper
   {
     $db =& JFactory::getDBO();
     $published = ' ';//' published=1';
-    $select = 'SELECT id,historicdate as thedate, DAY(historicdate) as theday,MONTH(historicdate) as themonth, YEAR(historicdate) as theyear,title,description'.' FROM #__efemerides ';
+    $select = 'SELECT id,historicdate as thedate, DAY(historicdate) as theday,MONTH(historicdate) as themonth, YEAR(historicdate) as theyear,title,description'.' FROM #__efemerides WHERE';
     $order = $this->getOrderEfemerides();
     $query = ''.$select.$published.$order;
     switch($this->date_range)
