@@ -78,10 +78,10 @@ class modEfemeridesHelper
     {
     case 'by_day':
       $query = $select.' DAY(NOW())=DAY(historicdate) '.
-        ' AND MONTH(NOW())=MONTH(historicdate) AND'.$published.$order;
+        ' AND MONTH(NOW())=MONTH(historicdate)'.$published.$order;
       break;
     case 'by_month':
-      $query = $select.' MONTH(NOW())=MONTH(historicdate) AND'.$published.$order;
+      $query = $select.' MONTH(NOW())=MONTH(historicdate)'.$published.$order;
       break;
     case 'by_year':
       $query = ''.$select.$published.$order;
