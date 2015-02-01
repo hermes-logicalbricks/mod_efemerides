@@ -110,7 +110,7 @@ class modEfemeridesHelper
     $offset = $config->get('offset');
     foreach ($list as $l)
     {
-      $date = new JDate( $l->thedate, $offset );
+      $date = new JDate( $l->thedate );
       $l->formatteddate = $date->format($this->format_for_date);
       $newlist[] = $l;
     }
