@@ -70,7 +70,7 @@ class modEfemeridesHelper
   private function getListEfemerides()
   {
     $db =& JFactory::getDBO();
-    $published = ' ';//' published=1';
+    $published = ' published=1';
     $select = 'SELECT id,historicdate as thedate, DAY(historicdate) as theday,MONTH(historicdate) as themonth, YEAR(historicdate) as theyear,title,description'.' FROM #__efemerides WHERE';
     $order = $this->getOrderEfemerides();
     $query = ''.$select.$published.$order;
@@ -78,10 +78,10 @@ class modEfemeridesHelper
     {
     case 'by_day':
       $query = $select.' DAY(NOW())=DAY(historicdate) '.
-        ' AND MONTH(NOW())=MONTH(historicdate)'.$published.$order;
+        ' AND MONTH(NOW())=MONTH(historicdate) AND '.$published.$order;
       break;
     case 'by_month':
-      $query = $select.' MONTH(NOW())=MONTH(historicdate)'.$published.$order;
+      $query = $select.' MONTH(NOW())=MONTH(historicdate) AND'.$published.$order;
       break;
     case 'by_year':
       $query = ''.$select.$published.$order;
